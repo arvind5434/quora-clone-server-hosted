@@ -55,8 +55,8 @@ router.post("/register-post", upload.single("file"), async (req, res) => {
           profession,
         });
         const registeredPost = await newPost.save();
-        const post = await userpost.find({});
-        res.json({ success: true, post });
+        const sendPost = await userpost.find({});
+        res.json({ success: true, sendPost });
       } else {
         const newPost = new userpost({
           content,
