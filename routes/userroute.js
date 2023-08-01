@@ -299,9 +299,17 @@ router.post("/handle-downvote", async (req, res) => {
 router.post("/handle-delete-post", async (req, res) => {
   try {
     const { userEmail, postId, postOwner } = req.body;
-    const deletePost = await userpost.findByIdAndDelete(postId);
-    const sendPost = await userpost.find({});
-    res.json({ sendPost });
+    const post = await userpost.findById(postId);
+    if (post.imageUrl) {
+      const deleteImage = await cloudinary.uploader.destroy(post.publicId);
+      const deletePost = await userpost.findByIdAndDelete(postId);
+      const sendPost = await userpost.find({});
+      res.json({ sendPost });
+    } else {
+      const deletePost = await userpost.findByIdAndDelete(postId);
+      const sendPost = await userpost.find({});
+      res.json({ sendPost });
+    }
   } catch (err) {
     console.log(err);
   }
